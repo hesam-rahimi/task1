@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
-const SelectedBox = ({ items, checked, setChecked, setData }) => {
+const RightSide = ({ items, checked, setChecked, setData }) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
 
   const onChange = (e) => {
     const valueKey = e.target.value;
     const checked = e.target.checked;
+    const mainItem = [...items].find((item) => item.uniqueId === +valueKey);
     if (checked) {
       setChecked((prev) => ({ ...prev, [valueKey]: true }));
-      const mainItem = items.find((item) => item.uniqueId === +valueKey);
-      mainItem.isSelect = true;
-      // setData((prev) => [...prev, [...items]]);
-    } else
+      mainItem.isSelect = false;
+    } else {
       setChecked((prev) => {
         const newData = { ...prev };
         delete newData[valueKey];
         return newData;
       });
-      
+      mainItem.isSelect = true;
+    }
   };
 
   const onChangeAll = (e) => {
@@ -29,8 +29,10 @@ const SelectedBox = ({ items, checked, setChecked, setData }) => {
         prev = { ...prev, [current.uniqueId]: true };
         return prev;
       }, {});
+      items.forEach((item) => (item.isSelect = true));
       setChecked((prev) => ({ ...prev, ...ids }));
     } else {
+      items.forEach((item) => (item.isSelect = false));
       setChecked((prev) => {
         const newData = { ...prev };
         items.forEach(({ uniqueId }) => delete newData[uniqueId]);
@@ -86,4 +88,4 @@ const SelectedBox = ({ items, checked, setChecked, setData }) => {
   );
 };
 
-export default SelectedBox;
+export default RightSide;

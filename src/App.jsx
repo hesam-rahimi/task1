@@ -1,43 +1,47 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import SelectedBox from "./components/SelectedBox";
 import { DATA, grouping, unGrouping } from "./helper/indes";
-
+import LeftSide from "./components/LeftSide";
+import RightSide from "./components/RightSide";
 function App() {
   const [checked, setChecked] = useState({});
-  const [leftData, setLeftData] = useState(grouping(DATA));
-  const [rightData, setRightData] = useState([]);
+  const [data, setData] = useState([grouping(DATA), []]);
+  // useEffect(() => {
+  //   console.log(data[0]);
+  // }, [data]);
 
   const addHandler = () => {
-    setLeftData((leftPrev) => {
-      const notGroupedData = unGrouping(leftPrev);
-      const newRightData = notGroupedData.filter(
+    setData((prev) => {
+      const notGroupedRightData = unGrouping(prev[1]);
+      const notGroupedLeftData = unGrouping(prev[0]);
+      const newRightData = notGroupedLeftData.filter(
         (item) => item.uniqueId in checked
       );
-      const newLeftData = notGroupedData.filter(
+      const newLeftData = notGroupedLeftData.filter(
         (item) => !(item.uniqueId in checked)
       );
-      setRightData((rightPrev) => {
-        return grouping([...newRightData, ...unGrouping(rightPrev)]);
-      });
-      return grouping(newLeftData);
+      return [
+        grouping(newLeftData),
+        grouping([...newRightData, ...notGroupedRightData]),
+      ];
     });
     setChecked({});
   };
 
   const deleteHandler = () => {
-    setRightData((rightPrev) => {
-      const notGroupedData = unGrouping(rightPrev);
-      const newLeftData = notGroupedData.filter(
-        (item) => item.uniqueId in checked
-      );
-      const newRightData = notGroupedData.filter(
+    setData((prev) => {
+      const notGroupedRightData = unGrouping(prev[1]);
+      const notGroupedLeftData = unGrouping(prev[0]);
+      const newRightData = notGroupedRightData.filter(
         (item) => !(item.uniqueId in checked)
       );
-      setLeftData((leftPrev) => {
-        return grouping([...newLeftData, ...unGrouping(leftPrev)]);
-      });
-      return grouping(newRightData);
+      const newLeftData = notGroupedRightData.filter(
+        (item) => item.uniqueId in checked
+      );
+      return [
+        grouping([...newLeftData, ...notGroupedLeftData]),
+        grouping(newRightData),
+      ];
     });
     setChecked({});
   };
@@ -54,11 +58,12 @@ function App() {
           Add
         </button>
         <div>
-          {leftData.map((item) => {
+          {data[0].map((items) => {
             return (
-              <SelectedBox
-                key={item[0].uniqueId}
-                item={item}
+              <LeftSide
+                key={items.map((i) => i.uniqueId)}
+                items={items}
+                setData={setData}
                 checked={checked}
                 setChecked={setChecked}
               />
@@ -79,11 +84,11 @@ function App() {
           Delete
         </button>
         <div>
-          {rightData.map((item) => {
+          {data[1].map((items) => {
             return (
-              <SelectedBox
-                key={item[0].uniqueId}
-                item={item}
+              <RightSide
+                key={items.map((i) => i.uniqueId)}
+                items={items}
                 checked={checked}
                 setChecked={setChecked}
               />

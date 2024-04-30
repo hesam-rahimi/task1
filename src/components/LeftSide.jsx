@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
-const SelectedBox = ({ items, checked, setChecked, setData }) => {
+const LeftSide = ({ items, checked, setChecked, setData }) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
 
   const onChange = (e) => {
@@ -9,16 +9,13 @@ const SelectedBox = ({ items, checked, setChecked, setData }) => {
     const checked = e.target.checked;
     if (checked) {
       setChecked((prev) => ({ ...prev, [valueKey]: true }));
-      const mainItem = items.find((item) => item.uniqueId === +valueKey);
-      mainItem.isSelect = true;
-      // setData((prev) => [...prev, [...items]]);
-    } else
+    } else {
       setChecked((prev) => {
         const newData = { ...prev };
         delete newData[valueKey];
         return newData;
       });
-      
+    }
   };
 
   const onChangeAll = (e) => {
@@ -86,4 +83,4 @@ const SelectedBox = ({ items, checked, setChecked, setData }) => {
   );
 };
 
-export default SelectedBox;
+export default LeftSide;
