@@ -123,7 +123,9 @@ export const DATA = [
 
 export const grouping = (data) => {
   const groupedData = data.reduce((prev, crr) => {
-    !prev[crr.id] ? (prev[crr.id] = [{ ...crr }]) : prev[crr.id].push({ ...crr });
+    !prev[crr.id]
+      ? (prev[crr.id] = [{ ...crr }])
+      : prev[crr.id].push({ ...crr });
     return prev;
   }, {});
   return Object.values(groupedData);
