@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
-const RightSide = ({ items, checked, setChecked, setData }) => {
+const RightSide = ({ items, checked, setChecked }) => {
   const [isShowDetail, setIsShowDetail] = useState(false);
 
   const onChange = (e) => {
